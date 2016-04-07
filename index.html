@@ -5,6 +5,7 @@
     <meta name="description" content="A tree mapper diagram to show and edit the relationships between items in two different trees." />
     <!-- Copyright 1998-2016 by Northwoods Software Corporation. -->
     <meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
     <script src="go-debug.js"></script>
     <script id="code">
 
@@ -1638,6 +1639,12 @@
 
             myDiagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
         }
+        
+        $(document).ready(function(){
+
+        // jQuery methods go here...
+        
+        });
 
     </script>
 </head>
