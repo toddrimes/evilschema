@@ -5,30 +5,35 @@
     <meta name="description" content="A tree mapper diagram to show and edit the relationships between items in two different trees." />
     <!-- Copyright 1998-2016 by Northwoods Software Corporation. -->
     <meta charset="UTF-8">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
     <script src="go-debug.js"></script>
     <script id="code">
 
         function arrayConvert(data){
             var chartData = [];
 
-            for (var i in data) {
-                var item = data[i];
-                var outer = [];
-                // skip over items in the outer object that aren't nested objects themselves
-                if (typeof item === "object") {
-                    for (var j in item) {
-                        var temp = [];
-                        temp.push(j);
-                        temp.push(item[j]);
-                        outer.push(temp);
+            if (typeof data === "object") {
+                for (var i in data) {
+                    var item = data[i];
+                    var outer = [];
+                    // skip over items in the outer object that aren't nested objects themselves
+                    if (typeof item === "object") {
+                        for (var j in item) {
+                            var temp = [];
+                            temp.push(j);
+                            temp.push(arrayConvert(item[j]));
+                            outer.push(temp);
+                        }
+                    } else {
+                        outer.push(i);
+                    }
+                    if (outer.length) {
+                        chartData.push(outer);
                     }
                 }
-                if (outer.length) {
-                    chartData.push(outer);
-                }
+            } else {
+                console.log("non-object is " + data);
             }
-
+            
             return chartData;
         }
 
@@ -1639,12 +1644,6 @@
 
             myDiagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
         }
-        
-        $(document).ready(function(){
-
-        // jQuery methods go here...
-        
-        });
 
     </script>
 </head>
