@@ -1634,13 +1634,38 @@
             var itemNames = [];
             for (var i=0; i < saLen; i++) {
                 info = schemaArray[i];
-                var childdata = { key: info[0], group: -1 };
+                var childdata = { key: "s."+info[0], group: -1 };
                 var parent = info[0];
                 if (typeof info[1][0][0] != "undefined" && typeof info[1][0][0] == "object") {
                     for (var j in info[1][0][0].properties){
                         //console.log(j);
-                        nodeDataArray.push({ key: j, group: -1 });
-                        linkDataArray.push({from:parent, to: j});
+                        nodeDataArray.push({ key: "s."+j, group: -1 });
+                        linkDataArray.push({from:"s."+parent, to: "s."+j});
+                    }
+                }
+                for (var j=0;j<info[1].length;j++) {
+                    if (typeof info[1][j][0] != "undefined" && typeof info[1][j][0].type!="undefined" ) {
+                        childdata.type = info[1][j][0].type;
+                    }
+                    if (typeof info[1][j][0] != "undefined" && typeof info[1][j][0].default!="undefined" ) {
+                        childdata.default = info[1][j][0].default;
+                    }
+                    if (typeof info[1][j][0] != "undefined" && typeof info[1][j][0].minLength!="undefined" ) {
+                        childdata.minLength = info[1][j][0].minLength;
+                    }
+                }
+                nodeDataArray.push(childdata);
+                // console.log(info);
+            }
+            for (var i=0; i < saLen; i++) {
+                info = schemaArray[i];
+                var childdata = { key: "c."+info[0], group: -2 };
+                var parent = info[0];
+                if (typeof info[1][0][0] != "undefined" && typeof info[1][0][0] == "object") {
+                    for (var j in info[1][0][0].properties){
+                        //console.log(j);
+                        nodeDataArray.push({ key: "c."+j, group: -2 });
+                        linkDataArray.push({from:"c."+parent, to: "c."+j});
                     }
                 }
                 for (var j=0;j<info[1].length;j++) {
