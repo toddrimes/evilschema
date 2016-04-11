@@ -24,7 +24,7 @@
                             outer.push(temp);
                         }
                     } else {
-                        outer.push(i);
+                        outer.push(data);
                     }
                     if (outer.length) {
                         chartData.push(outer);
@@ -1619,24 +1619,41 @@
             // initialize tree on left side
             var i = 0;
             var schemaArray = arrayConvert(schemaObject);
-            console.log(schemaArray);
-            var saLen = schemaArray[0].length;
+            // console.log(schemaArray);
+
+            var saLen = schemaArray.length;
+            var tempArray = null;
+            for (var i=0; i < saLen; i++) {
+                if(schemaArray[i].length > 1) {
+                    tempArray = schemaArray[i];
+                    break;
+                }
+            }
+            schemaArray = tempArray;
+            saLen = schemaArray.length;
             var itemNames = [];
             for (var i=0; i < saLen; i++) {
-                info = schemaArray[0][i];
-                var childdata = { key: info[0], group: -1 , type: info[1].type , default: info[1].default };
-                nodeDataArray.push(childdata);
-                // console.log(info);
-            }
-            for (var i=0; i < saLen; i++) {
-                info = schemaArray[0][i];
-                var childdata = { key: info[0], group: -2 , type: info[1].type , default: info[1].default };
-                nodeDataArray.push(childdata);
-                // console.log(info);
-            }
-            for (var i=0; i < saLen; i++) {
-                info = schemaArray[0][i];
-                var childdata = { key: info[0], group: -3 , type: info[1].type , default: info[1].default };
+                info = schemaArray[i];
+                var childdata = { key: info[0], group: -1 };
+                var parent = info[0];
+                if (typeof info[1][0][0] != "undefined" && typeof info[1][0][0] == "object") {
+                    for (var j in info[1][0][0].properties){
+                        //console.log(j);
+                        nodeDataArray.push({ key: j, group: -1 });
+                        linkDataArray.push({from:parent, to: j});
+                    }
+                }
+                for (var j=0;j<info[1].length;j++) {
+                    if (typeof info[1][j][0] != "undefined" && typeof info[1][j][0].type!="undefined" ) {
+                        childdata.type = info[1][j][0].type;
+                    }
+                    if (typeof info[1][j][0] != "undefined" && typeof info[1][j][0].default!="undefined" ) {
+                        childdata.default = info[1][j][0].default;
+                    }
+                    if (typeof info[1][j][0] != "undefined" && typeof info[1][j][0].minLength!="undefined" ) {
+                        childdata.minLength = info[1][j][0].minLength;
+                    }
+                }
                 nodeDataArray.push(childdata);
                 // console.log(info);
             }
